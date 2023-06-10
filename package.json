@@ -1,0 +1,24 @@
+{
+  "name": "bol-retailer-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "module": "index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/team-bicep/bol-retailer-api.git"
+  },
+  "author": "Sven Elmendorp",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/team-bicep/bol-retailer-api/issues"
+  },
+  "homepage": "https://github.com/team-bicep/bol-retailer-api#readme",
+  "dependencies": {
+    "csvtojson": "^2.0.10",
+    "node-fetch": "^2.6.7"
+  }
+}
