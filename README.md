@@ -1,8 +1,6 @@
 # Bol.com Retailer API Wrapper
 Source https://api.bol.com/retailer/public/redoc/v7/retailer.html
 Inspired by https://github.com/Vultwo/bol-api
-*Why? We need our own bol retailer api integration for our system. We need case specific methods and type support. In order to quickly make updates when needed, our own implementation of the library deemed the best choice*
-
 <br>
 
 
@@ -11,6 +9,8 @@ npm i bol-api
 ```
 
 ## Usage
+
+This section is under maintanenance. and will only cover the original methods from `Vultwo/bol-api`
 ### Initialization
 ```javascript
 import Bol from 'bol-retailer-api'
