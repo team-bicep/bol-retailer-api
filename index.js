@@ -67,14 +67,13 @@ class Bol {
     });
   }
 
-
   // Offers
 
   /**
    * Retrieve a single offer from the Bol platform.
    * @param {string} offer_id - The ID of the offer.
    * @param {number} [tries=3] - The number of attempts to pause the offer.
-   * @returns 
+   * @returns
    */
   async getOffer(offer_id, tries = 3) {
     return new Promise(async (resolve, reject) => {
@@ -254,8 +253,12 @@ class Bol {
    */
   async orders(page, status, tries = 3) {
     return new Promise(async (resolve, reject) => {
+      const currentDate = new Date();
+      currentDate.setMonth(currentDate.getMonth() - 3);
+      currentDate.setDate(currentDate.getDate() + 1);
+      const threeMonthsAgo = currentDate.toDateString();
       try {
-        let resp = await fetch('https://api.bol.com/retailer/orders?page=' + page + '&status=' + status, {
+        let resp = await fetch(`https://api.bol.com/retailer/orders?page=${page}&status=${status}`, {
           method: 'GET',
           headers: await this.bolHeader(2),
         });
@@ -266,6 +269,62 @@ class Bol {
         tries--;
         if (tries <= 0) return reject();
         return setTimeout(() => resolve(this.orders(page, status, tries)), 2000);
+      }
+    });
+  }
+
+  /**
+   * Fetch shipments from the Bol platform.
+   * @param {number} page - The page number to fetch.
+   * @param {string} fulfilmentMethod - The status of the shipments to fetch.
+   * @param {number} [tries=3] - The number of attempts to fetch the orders.
+   * @returns {Promise<Array<Object>>} - A promise that resolves with an array of orders.
+   */
+  async shipments(page, fulfilmentMethod, tries = 3) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let resp = await fetch(
+          `https://api.bol.com/retailer/shipments?page=${page}&fulfilment-method=${fulfilmentMethod}`,
+          {
+            method: 'GET',
+            headers: await this.bolHeader(2),
+          }
+        );
+        resp = await resp.json();
+        if (resp.shipments == undefined) resp.shipments = [];
+        return resolve(resp.shipments);
+      } catch (e) {
+        tries--;
+        if (tries <= 0) return reject();
+        return setTimeout(() => resolve(this.shipments(page, fulfilmentMethod, tries)), 2000);
+      }
+    });
+  }
+
+  /**
+   * Fetch shipments from the Bol platform.
+   * @param {number} page - The page number to fetch.
+   * @param {string} fulfilmentMethod - The status of the shipments to fetch.
+   * @param {number} [tries=3] - The number of attempts to fetch the orders.
+   * @returns {Promise<Array<Object>>} - A promise that resolves with an array of orders.
+   */
+  async shipmentById(shipmentId, tries = 3) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let resp = await fetch(
+          `https://api.bol.com/retailer/shipments/${shipmentId}`,
+          {
+            method: 'GET',
+            headers: await this.bolHeader(2),
+          }
+        );
+        resp = await resp.json();
+        if (resp == undefined) resp = [];
+        return resolve(resp);
+      } catch (e) {
+        tries--;
+        if (tries <= 0) return reject();
+        return setTimeout(() => resolve(this.shipmentById(shipmentId, tries)), 2000);
       }
     });
   }

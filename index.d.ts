@@ -17,7 +17,9 @@ export default class Bol {
 
   export(tries?: number): Promise<TExportOffer[]>; // #REPLACE
 
-  orders(page: number, status: string, tries?: number): Promise<any[]>; // #REPLACE
+  orders(page: number, status: 'OPEN' | 'SHIPPED' | 'ALL', tries?: number): Promise<any[]>; // #REPLACE
+  
+  shipments(page: number, fulfilmentMethod: 'FBR' | 'FBB', tries?: number): Promise<any[]>; // #REPLACE
 
   detail(order_id: string, tries?: number): Promise<any>; // #REPLACE
 
