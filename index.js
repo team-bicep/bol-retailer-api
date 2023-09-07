@@ -253,10 +253,6 @@ class Bol {
    */
   async orders(page, status, tries = 3) {
     return new Promise(async (resolve, reject) => {
-      const currentDate = new Date();
-      currentDate.setMonth(currentDate.getMonth() - 3);
-      currentDate.setDate(currentDate.getDate() + 1);
-      const threeMonthsAgo = currentDate.toDateString();
       try {
         let resp = await fetch(`https://api.bol.com/retailer/orders?page=${page}&status=${status}`, {
           method: 'GET',
@@ -269,6 +265,30 @@ class Bol {
         tries--;
         if (tries <= 0) return reject();
         return setTimeout(() => resolve(this.orders(page, status, tries)), 2000);
+      }
+    });
+  }
+
+  /**
+   * Fetch orders from the Bol platform.
+   * @param {number} orderId - The page number to fetch.
+   * @param {number} [tries=3] - The number of attempts to fetch the orders.
+   * @returns {Promise<Array<Object>>} - A promise that resolves with an array of orders.
+   */
+  async orderById(orderId, tries = 3) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let resp = await fetch(`https://api.bol.com/retailer/orders/${orderId}`, {
+          method: 'GET',
+          headers: await this.bolHeader(2),
+        });
+        resp = await resp.json();
+        if (resp == undefined) resp = [];
+        return resolve(resp);
+      } catch (e) {
+        tries--;
+        if (tries <= 0) return reject();
+        return setTimeout(() => resolve(this.orderById(orderId, tries)), 2000);
       }
     });
   }
@@ -311,13 +331,10 @@ class Bol {
   async shipmentById(shipmentId, tries = 3) {
     return new Promise(async (resolve, reject) => {
       try {
-        let resp = await fetch(
-          `https://api.bol.com/retailer/shipments/${shipmentId}`,
-          {
-            method: 'GET',
-            headers: await this.bolHeader(2),
-          }
-        );
+        let resp = await fetch(`https://api.bol.com/retailer/shipments/${shipmentId}`, {
+          method: 'GET',
+          headers: await this.bolHeader(2),
+        });
         resp = await resp.json();
         if (resp == undefined) resp = [];
         return resolve(resp);

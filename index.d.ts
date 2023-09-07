@@ -19,7 +19,11 @@ export default class Bol {
 
   orders(page: number, status: 'OPEN' | 'SHIPPED' | 'ALL', tries?: number): Promise<any[]>; // #REPLACE
   
+  orderById(orderId:string, tries?: number): Promise<any[]>; // #REPLACE
+
   shipments(page: number, fulfilmentMethod: 'FBR' | 'FBB', tries?: number): Promise<any[]>; // #REPLACE
+  
+  shipmentById(shipmentId: string, tries?: number): Promise<any[]>; // #REPLACE
 
   detail(order_id: string, tries?: number): Promise<any>; // #REPLACE
 
