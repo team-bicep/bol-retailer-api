@@ -1,6 +1,9 @@
 # Bol.com Retailer API Wrapper
 
 Source https://api.bol.com/retailer/public/redoc/v10/retailer.html
+
+Github: https://github.com/team-bicep/bol-retailer-api
+NPM: https://www.npmjs.com/package/bol-retailer-api/access
 <br>
 
 ```bash
