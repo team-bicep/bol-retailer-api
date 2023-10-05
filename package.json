@@ -1,6 +1,6 @@
 {
   "name": "bol-retailer-api",
-  "version": "0.0.1",
+  "version": "10.0.0",
   "description": "",
   "main": "index.js",
   "module": "index.mjs",
