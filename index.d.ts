@@ -7,6 +7,8 @@ export default class Bol {
 
   createOffer(offerData: TOfferData, tries?: number): Promise<void>;
 
+  offerList(tries?: number): Promise<TOffer[]>;
+
   getOffer(order_id: string, tries?: number): Promise<TOffer>;
 
   pause(offer_id: string, hold: boolean, method: string, tries?: number): Promise<void>;
@@ -18,11 +20,11 @@ export default class Bol {
   export(tries?: number): Promise<TExportOffer[]>; // #REPLACE
 
   orders(page: number, status: 'OPEN' | 'SHIPPED' | 'ALL', tries?: number): Promise<any[]>; // #REPLACE
-  
-  orderById(orderId:string, tries?: number): Promise<any[]>; // #REPLACE
+
+  orderById(orderId: string, tries?: number): Promise<any[]>; // #REPLACE
 
   shipments(page: number, fulfilmentMethod: 'FBR' | 'FBB', tries?: number): Promise<any[]>; // #REPLACE
-  
+
   shipmentById(shipmentId: string, tries?: number): Promise<any[]>; // #REPLACE
 
   detail(order_id: string, tries?: number): Promise<any>; // #REPLACE

@@ -70,6 +70,32 @@ class Bol {
   // Offers
 
   /**
+   * Retrieve a list of offers from the Bol platform.
+   * @param {number} [tries=3] - The number of attempts to pause the offer.
+   * @returns {Promise<Object>} - A promise that resolves with the offer list.
+   * @example
+   * const offers = await bol.offerList();
+   * console.log(offers);
+   */
+  async offerList(tries = 3) {
+    return new Promise(async (resolve, reject) => {
+      console.log({ ...(await this.bolHeader(2)), 'Accept-Language': 'nl' });
+      try {
+        let resp = await fetch('https://api.bol.com/retailer/products/list', {
+          method: 'GET',
+          headers: { ...(await this.bolHeader(2)), 'Accept-Language': 'nl' },
+        });
+        resp = await resp.json();
+        return resolve(resp);
+      } catch (e) {
+        tries--;
+        if (tries <= 0) return reject(e);
+        return setTimeout(() => resolve(this.offerList(tries)), 2000);
+      }
+    });
+  }
+
+  /**
    * Retrieve a single offer from the Bol platform.
    * @param {string} offer_id - The ID of the offer.
    * @param {number} [tries=3] - The number of attempts to pause the offer.
