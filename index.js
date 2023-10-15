@@ -1,6 +1,12 @@
 const fetch = require("node-fetch");
 const fs = require("fs");
 const csvConverter = require("csvtojson");
+const Commission = require("./methods/commission");
+const Insights = require("./methods/insights");
+const Inventory = require("./methods/inventory");
+const Invoices = require("./methods/invoices");
+const Offers = require("./methods/offers");
+
 /**
  * Class representing the Bol API V.10.
  */
@@ -74,314 +80,35 @@ class Bol {
   }
 
   // Commission
-
-  /**
-   * Get all commissions and reductions by EAN per single EAN
-   * @description Commissions can be filtered by condition, which defaults to NEW. We will calculate the commission amount from the EAN and price
-   * @param {Object} ean - product EAN
-   * @param {number} [tries=3] - The number of attempts to fetch the commissions.
-   * @returns {Promise<Object>} - A promise that resolves with the commission list.
-   * @example
-   * const commissions = await bol.commissionList('0000007740404');
-   */
-  async commission(ean, tries = 3) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let resp = await fetch(
-          `https://api.bol.com/retailer/commission/${ean}`,
-          {
-            method: "get",
-            headers: await this.bolHeader(2),
-          }
-        );
-        resp = await resp.json();
-        return resolve(resp);
-      } catch (e) {
-        tries--;
-        if (tries <= 0) return reject(e);
-        return setTimeout(() => resolve(this.commissionList(tries)), 2000);
-      }
-    });
-  }
-
-  /**
-   * Get all commissions and reductions by EAN in bulk
-   * @description Gets all commissions and possible reductions by EAN, price, and optionally condition.
-   * @param {Object} commissionQueries - Array of objects
-   * @param {number} [tries=3] - The number of attempts to fetch the commissions.
-   * @returns {Promise<Object>} - A promise that resolves with the commission list.
-   * @example
-   * const commissionQueries = [
-        {
-          "ean": "0000007740404",
-          "condition": "NEW",
-          "unitPrice": 59
-        }
-      ]
-   * const commissions = await bol.commissionList(commissionQueries);
-   */
-  async commissionList(commissionQueries, tries = 3) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let resp = await fetch(`https://api.bol.com/retailer/commission/`, {
-          method: "POST",
-          body: JSON.stringify({
-            commissionQueries,
-          }),
-          headers: await this.bolHeader(2),
-        });
-        resp = await resp.json();
-        return resolve(resp.commissions);
-      } catch (e) {
-        tries--;
-        if (tries <= 0) return reject(e);
-        return setTimeout(() => resolve(this.commissionList(tries)), 2000);
-      }
-    });
-  }
+  // gotta check if this works. i dont know how to do this better
+  commission = Commission.commission;
+  commissionList = Commission.commissionList;
 
   // Insights
-
-  /**
-   * Get offer insights
-   * @description Get the product visits and the buy box percentage for an offer during a given period.
-   * @param {number} [tries=3] - The number of attempts to fetch the commissions.
-   * @returns {Promise<Object>} - A promise that resolves with the commission list.
-   * @example
-   * const insight = await bol.offerInsight();
-   */
-  async offerInsight(tries = 3) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let resp = await fetch("https://api.bol.com/retailer/insights/offer", {
-          method: "get",
-          headers: await this.bolHeader(2),
-        });
-        resp = await resp.json();
-        return resolve(resp.offerInsights);
-      } catch (e) {
-        tries--;
-        if (tries <= 0) return reject(e);
-        return setTimeout(() => resolve(this.offerInsight(tries)), 2000);
-      }
-    });
-  }
-
-  /**
-   * Get performance indicators
-   * @description Gets the measurements for your performance indicators per week.
-   * @param {number} [tries=3] - The number of attempts to fetch the commissions.
-   * @returns {Promise<Object>} - A promise that resolves with the commission list.
-   * @example
-   * const insight = await bol.offerInsight();
-   */
-  async performanceIndicator(tries = 3) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let resp = await fetch(
-          "https://api.bol.com/retailer/insights/performance/indicator",
-          {
-            method: "get",
-            headers: await this.bolHeader(2),
-          }
-        );
-        resp = await resp.json();
-        return resolve(resp.performanceIndicators);
-      } catch (e) {
-        tries--;
-        if (tries <= 0) return reject(e);
-        return setTimeout(() => resolve(this.offerInsight(tries)), 2000);
-      }
-    });
-  }
-
-  /**
-   * Get performance indicators
-   * @description Gets the measurements for your performance indicators per week.
-   * @param {number} [tries=3] - The number of attempts to fetch the commissions.
-   * @returns {Promise<Object>} - A promise that resolves with the commission list.
-   * @example
-   * const insight = await bol.offerInsight();
-   */
-  async salesForecast(tries = 3) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let resp = await fetch(
-          "https://api.bol.com/retailer/insights/sales-forecast",
-          {
-            method: "get",
-            headers: await this.bolHeader(2),
-          }
-        );
-        resp = await resp.json();
-        return resolve(resp);
-      } catch (e) {
-        tries--;
-        if (tries <= 0) return reject(e);
-        return setTimeout(() => resolve(this.offerInsight(tries)), 2000);
-      }
-    });
-  }
-
-  /**
-   * Get search terms
-   * @description Retrieves the search volume for a specified search term and period.
-   * The search volume allows you to see what bol.com customers are searching for.
-   * Based on the search volume per search term you can optimize your product content,
-   * or spot opportunities to extend your assortment, or analyzing trends for inventory management.
-   * @param {number} [tries=3] - The number of attempts to fetch the commissions.
-   * @returns {Promise<Object>} - A promise that resolves with the commission list.
-   * @example
-   * const insight = await bol.offerInsight();
-   */
-  async searchTerms(tries = 3) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let resp = await fetch(
-          "https://api.bol.com/retailer/insights/search-terms",
-          {
-            method: "get",
-            headers: await this.bolHeader(2),
-          }
-        );
-        resp = await resp.json();
-        return resolve(resp.searchTerms);
-      } catch (e) {
-        tries--;
-        if (tries <= 0) return reject(e);
-        return setTimeout(() => resolve(this.offerInsight(tries)), 2000);
-      }
-    });
-  }
+  offerInsight = Insights.offerInsight;
+  performanceIndicator = Insights.performanceIndicator;
+  salesForecast = Insights.salesForecast;
+  searchTerms = Insights.searchTerms;
 
   // Inventory
 
-  /**
-   * Get search terms
-   * @description The inventory endpoint is a specific LVB/FBB endpoint.
-   * It provides a paginated list containing your fulfilment by bol.com inventory.
-   * This endpoint does not provide information about your own stock.
-   * @param {number} [tries=3] - The number of attempts to fetch the commissions.
-   * @returns {Promise<Object>} - A promise that resolves with the commission list.
-   * @example
-   * const insight = await bol.offerInsight();
-   */
-  async getInventory(tries = 3) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let resp = await fetch("https://api.bol.com/retailer/inventory", {
-          method: "get",
-          headers: await this.bolHeader(2),
-        });
-        resp = await resp.json();
-        return resolve(resp.inventory);
-      } catch (e) {
-        tries--;
-        if (tries <= 0) return reject(e);
-        return setTimeout(() => resolve(this.offerInsight(tries)), 2000);
-      }
-    });
-  }
+  getInventory = Inventory.getInventory;
 
   // Invoices
+  getInvoices = Invoices.getInvoices;
+  getInvoiceById = Invoices.getInvoiceById;
+  getInvoiceSpecificationById = Invoices.getInvoiceSpecificationById;
+  // Offers
 
-  /**
-   * Get all invoices
-   * @description Gets a list of invoices, by default from the past 4 weeks.
-   * The optional period-start-date and period-end-date-date parameters can be
-   * used together to retrieve invoices from a specific date range in the past,
-   * the period can be no longer than 31 days. Invoices and their specifications
-   * can be downloaded separately in different media formats with the
-   * ‘GET an invoice by id’ and the ‘GET an invoice specification by id’ calls.
-   * The available media types differ per invoice and are listed per invoice
-   * within the response. Note: the media types listed in the response must be
-   * given in our standard API format.
-   * @param {number} [tries=3] - The number of attempts to fetch the commissions.
-   * @returns {Promise<Object>} - A promise that resolves with the commission list.
-   * @example
-   * const insight = await bol.getInvoices();
-   */
-  async getInvoices(tries = 3) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let resp = await fetch("https://api.bol.com/retailer/invoices", {
-          method: "get",
-          headers: await this.bolHeader(2),
-        });
-        resp = await resp.json();
-        return resolve(resp);
-      } catch (e) {
-        tries--;
-        if (tries <= 0) return reject(e);
-        return setTimeout(() => resolve(this.getInvoices(tries)), 2000);
-      }
-    });
-  }
-
-  /**
-   * Get an invoice by invoice id
-   * @description Gets an invoice by invoice id.
-   * The available media types differ per invoice and are listed within the response from the
-   * ‘GET all invoices’ call. Note: the media types listed in the response must
-   * be given in our standard API format.
-   * @param {string} [invoiceId] - The ID of the invoice
-   * @param {number} [tries=3] - The number of attempts to fetch the commissions.
-   * @returns {Promise<Object>} - A promise that resolves with the commission list.
-   * @example
-   * const insight = await bol.getInvoices();
-   */
-  async getInvoiceById(InvoiceId, tries = 3) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let resp = await fetch(
-          `https://api.bol.com/retailer/invoices/${InvoiceId}`,
-          {
-            method: "get",
-            headers: await this.bolHeader(2),
-          }
-        );
-        resp = await resp.json();
-        return resolve(resp);
-      } catch (e) {
-        tries--;
-        if (tries <= 0) return reject(e);
-        return setTimeout(() => resolve(this.getInvoices(tries)), 2000);
-      }
-    });
-  }
-
-  /**
-   * Get an invoice specification by invoice id
-   * @description Gets an invoice specification for an invoice
-   * with a paginated list of its transactions. The available
-   * media types differ per invoice specification and are
-   * listed within the response from the ‘GET all invoices’ call.
-   * Note, the media types listed in the response must be given in our standard API format.
-   * @param {string} [invoiceId] - The ID of the invoice
-   * @param {number} [tries=3] - The number of attempts to fetch the commissions.
-   * @returns {Promise<Object>} - A promise that resolves with the commission list.
-   * @example
-   * const insight = await bol.getInvoices();
-   */
-  async getInvoiceSpecificationById(InvoiceId, tries = 3) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let resp = await fetch(
-          `https://api.bol.com/retailer/invoices/${InvoiceId}/specification`,
-          {
-            method: "get",
-            headers: await this.bolHeader(2),
-          }
-        );
-        resp = await resp.json();
-        return resolve(resp);
-      } catch (e) {
-        tries--;
-        if (tries <= 0) return reject(e);
-        return setTimeout(() => resolve(this.getInvoices(tries)), 2000);
-      }
-    });
-  }
+  createNewOffer = Offers.createNewOffer;
+  exportOffers = Offers.exportOffers;
+  retrieveUnpublishedOfferReportById =
+    Offers.retrieveUnpublishedOfferReportById;
+  retrieveOfferByOfferId = Offers.retrieveOfferByOfferId;
+  updateOffer = Offers.updateOffer;
+  deleteOffer = Offers.deleteOffer;
+  updateOfferPrice = Offers.updateOfferPrice;
+  updateOfferStock = Offers.updateOfferStock;
 
   // Depricated v9:
   // Offers
@@ -544,86 +271,6 @@ class Bol {
           () => resolve(this.delivery(offer_id, fulfilment, tries)),
           2000
         );
-      }
-    });
-  }
-
-  /**
-   * Export offers from the Bol platform.
-   * @param {number} [tries=3] - The number of attempts to export the offers.
-   * @returns {Promise<Array<Object>>} - A promise that resolves with an array of exported offers.
-   */
-  async export(tries = 3) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let headers = await this.bolHeader(3);
-        headers["Content-Type"] = headers["Accept"];
-        let resp = await fetch("https://api.bol.com/retailer/offers/export", {
-          method: "POST",
-          body: JSON.stringify({ format: "CSV" }),
-          headers: headers,
-        });
-        resp = await resp.json();
-        let exportId = resp.processStatusId,
-          csv;
-        if (!resp.links) return reject(resp);
-        do {
-          await new Promise((res) => setTimeout(res, 20e3));
-          headers = await this.bolHeader(3);
-          let status = await fetch(resp.links[0].href, {
-            method: "GET",
-            headers: headers,
-          });
-          status = await status.json();
-          if (status.status == "SUCCESS") {
-            exportId = status.entityId;
-            headers = await this.bolHeader(3);
-            headers["Accept"] = "application/vnd.retailer.v9+csv";
-            headers["Content-Type"] = "application/x-www-form-urlencoded";
-            let exported = await fetch(
-              "https://api.bol.com/retailer/offers/export/" + exportId,
-              {
-                method: "GET",
-                headers: headers,
-              }
-            );
-            if (exported.status != 200) return reject();
-            const fileStream = fs.createWriteStream("./export_offers.csv", {
-              flags: "w",
-            });
-            try {
-              await new Promise((res, rej) => {
-                exported.body.pipe(fileStream);
-                exported.body.on("error", (err) => {
-                  console.error(err);
-                  rej();
-                });
-                fileStream.on("finish", () => {
-                  csv = true;
-                  res();
-                });
-              });
-            } catch (e) {
-              return reject(e);
-            }
-          }
-        } while (!csv);
-        csvConverter()
-          .fromFile("./export_offers.csv")
-          .then((json) => {
-            fs.unlink("./export_offers.csv", (err) => {
-              return resolve(json);
-            });
-          })
-          .catch((err) => {
-            console.error(err);
-            return reject();
-          });
-      } catch (e) {
-        console.error(e);
-        tries--;
-        if (tries <= 0) return reject();
-        return setTimeout(() => resolve(this.bolExport(tries)), 2000);
       }
     });
   }
