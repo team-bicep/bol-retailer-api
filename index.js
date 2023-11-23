@@ -4,7 +4,7 @@ const Insights = require('./methods/insights');
 const Inventory = require('./methods/inventory');
 const Invoices = require('./methods/invoices');
 const Offers = require('./methods/offers');
-
+const Products = require('./methods/products');
 /**
  * Class representing the Bol API V.10.
  */
@@ -102,6 +102,9 @@ class Bol {
   updateOfferStock = Offers.updateOfferStock;
   retrieveOfferReportById = Offers.retrieveOfferReportById;
   exportStatus = Offers.exportStatus;
+
+  // Products
+  getProductIdsByEan = Products.getProductIdsByEan;
 
   // Depricated v9:
   // Offers

@@ -257,6 +257,17 @@ export default class Bol {
    */
   updateOfferStock(offerId: string, offerStock: TOfferStocks, tries?: number): Promise<void>;
 
+  /**
+   * Get product ids by EAN
+   * @description Get the bol.com specific product identifier and the related EANs.
+   * @param {string} [offerId] - The EAN number associated with this product.
+   * @param {number} [tries=3] - The number of attempts
+   * @returns {Promise<Object>}
+   * @example
+   * const insight = await bol.getProductIdsByEan();
+   */
+  getProductIdsByEan(ean: string, tries?: number): Promise<string[]>;
+
   // deprecated, Remove once v10 finished
   offerList(tries?: number): Promise<TOffer[]>;
 
