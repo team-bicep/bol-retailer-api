@@ -1,15 +1,6 @@
-import {
-  TCommission,
-  TCommissionQueries,
-  TReduction,
-} from "./types/commissions";
-import {
-  TInsights,
-  TPerformanceIndicator,
-  TSalesForecast,
-  TSearchTerm,
-} from "./types/insights";
-import { TInventory } from "./types/inventory";
+import { TCommission, TCommissionQueries, TReduction } from './types/commissions';
+import { TInsights, TPerformanceIndicator, TSalesForecast, TSearchTerm } from './types/insights';
+import { TInventory } from './types/inventory';
 
 export default class Bol {
   constructor(APIKEY: string, SECRET: string);
@@ -45,10 +36,7 @@ export default class Bol {
       ]
    * const commissions = await bol.commissionList(commissionQueries);
    */
-  commissionList(
-    commissionQueries: TCommissionQueries,
-    tries?: number
-  ): Promise<TCommission[]>;
+  commissionList(commissionQueries: TCommissionQueries, tries?: number): Promise<TCommission[]>;
 
   // Insights
 
@@ -156,10 +144,7 @@ export default class Bol {
    * @example
    * const insight = await bol.getInvoices();
    */
-  getInvoiceSpecificationById(
-    invoiceId: string,
-    tries?: number
-  ): Promise<string>;
+  getInvoiceSpecificationById(invoiceId: string, tries?: number): Promise<string>;
 
   // Offers
 
@@ -173,10 +158,7 @@ export default class Bol {
    * @example
    * const insight = await bol.createNewOffer();
    */
-  createOffer(
-    offerData: TOfferData,
-    tries?: number
-  ): Promise<TCreateOfferResult>;
+  createOffer(offerData: TOfferData, tries?: number): Promise<TCreateOfferResult>;
 
   /**
    * Export offers from the Bol platform.
@@ -194,10 +176,29 @@ export default class Bol {
    * @example
    * const insight = await bol.createNewOffer();
    */
-  retrieveUnpublishedOfferReportById(
-    reportId: string,
-    tries?: number
-  ): Promise<string>;
+  retrieveOfferReportById(reportId: string, tries?: number): Promise<string>;
+
+  /**
+   * Retrieve an unpublished offer report by report id
+   * @description Retrieve an unpublished offer report containing all unpublished offers and reasons.
+   * @param {string} [reportId] - Unique identifier for unpublished offer report.
+   * @param {number} [tries=3] - The number of attempts
+   * @returns {Promise<Object>}
+   * @example
+   * const insight = await bol.createNewOffer();
+   */
+  exportStatus(url: string, tries?: number): Promise<string>;
+
+  /**
+   * Retrieve an unpublished offer report by report id
+   * @description Retrieve an unpublished offer report containing all unpublished offers and reasons.
+   * @param {string} [reportId] - Unique identifier for unpublished offer report.
+   * @param {number} [tries=3] - The number of attempts
+   * @returns {Promise<Object>}
+   * @example
+   * const insight = await bol.createNewOffer();
+   */
+  retrieveUnpublishedOfferReportById(reportId: string, tries?: number): Promise<string>;
 
   /**
    * Retrieve an offer by its offer id
@@ -219,11 +220,7 @@ export default class Bol {
    * @example
    * const insight = await bol.createNewOffer();
    */
-  updateOffer(
-    offerId: string,
-    offerData: TUpdateOfferData,
-    tries?: number
-  ): Promise<TCreateOfferResult>;
+  updateOffer(offerId: string, offerData: TUpdateOfferData, tries?: number): Promise<TCreateOfferResult>;
 
   /**
    * Delete offer by id
@@ -246,11 +243,7 @@ export default class Bol {
    * @example
    * const insight = await bol.createNewOffer();
    */
-  updateOfferPrice(
-    offerId: string,
-    offerPrice: TOfferPrices,
-    tries?: number
-  ): Promise<void>;
+  updateOfferPrice(offerId: string, offerPrice: TOfferPrices, tries?: number): Promise<void>;
 
   /**
    * Update stock for offer by id
@@ -262,46 +255,24 @@ export default class Bol {
    * @example
    * const insight = await bol.createNewOffer();
    */
-  updateOfferStock(
-    offerId: string,
-    offerStock: TOfferStocks,
-    tries?: number
-  ): Promise<void>;
+  updateOfferStock(offerId: string, offerStock: TOfferStocks, tries?: number): Promise<void>;
 
   // deprecated, Remove once v10 finished
   offerList(tries?: number): Promise<TOffer[]>;
 
   getOffer(order_id: string, tries?: number): Promise<TOffer>;
 
-  pause(
-    offer_id: string,
-    hold: boolean,
-    method: string,
-    tries?: number
-  ): Promise<void>;
+  pause(offer_id: string, hold: boolean, method: string, tries?: number): Promise<void>;
 
-  stock(
-    offer_id: string,
-    stock: number,
-    managedByRetailer: boolean,
-    tries?: number
-  ): Promise<void>;
+  stock(offer_id: string, stock: number, managedByRetailer: boolean, tries?: number): Promise<void>;
 
   delivery(offer_id: string, fulfilment: any, tries?: number): Promise<boolean>; // #REPLACE
 
-  orders(
-    page: number,
-    status: "OPEN" | "SHIPPED" | "ALL",
-    tries?: number
-  ): Promise<any[]>; // #REPLACE
+  orders(page: number, status: 'OPEN' | 'SHIPPED' | 'ALL', tries?: number): Promise<any[]>; // #REPLACE
 
   orderById(orderId: string, tries?: number): Promise<any[]>; // #REPLACE
 
-  shipments(
-    page: number,
-    fulfilmentMethod: "FBR" | "FBB",
-    tries?: number
-  ): Promise<any[]>; // #REPLACE
+  shipments(page: number, fulfilmentMethod: 'FBR' | 'FBB', tries?: number): Promise<any[]>; // #REPLACE
 
   shipmentById(shipmentId: string, tries?: number): Promise<any[]>; // #REPLACE
 
@@ -318,8 +289,8 @@ type TCountry = {
 };
 
 export enum EConditionName {
-  AS_NEW = "AS_NEW",
-  NEW = "NEW",
+  AS_NEW = 'AS_NEW',
+  NEW = 'NEW',
 }
 
 export type TOfferData = {

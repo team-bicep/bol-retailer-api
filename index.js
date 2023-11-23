@@ -1,11 +1,9 @@
-const fetch = require("node-fetch");
-const fs = require("fs");
-const csvConverter = require("csvtojson");
-const Commission = require("./methods/commission");
-const Insights = require("./methods/insights");
-const Inventory = require("./methods/inventory");
-const Invoices = require("./methods/invoices");
-const Offers = require("./methods/offers");
+const fetch = require('node-fetch');
+const Commission = require('./methods/commission');
+const Insights = require('./methods/insights');
+const Inventory = require('./methods/inventory');
+const Invoices = require('./methods/invoices');
+const Offers = require('./methods/offers');
 
 /**
  * Class representing the Bol API V.10.
@@ -31,12 +29,11 @@ class Bol {
   async bolHeader(tries = 3) {
     return new Promise(async (resolve, reject) => {
       try {
-        if (!this.bol_token || this.expires_in < new Date().getTime())
-          await this.bolAccess(tries);
+        if (!this.bol_token || this.expires_in < new Date().getTime()) await this.bolAccess(tries);
         return resolve({
-          Accept: "application/vnd.retailer.v10+json",
-          "Content-Type": "application/vnd.retailer.v9+json",
-          Authorization: "Bearer " + this.bol_token,
+          Accept: 'application/vnd.retailer.v10+json',
+          'Content-Type': 'application/vnd.retailer.v10+json',
+          Authorization: 'Bearer ' + this.bol_token,
         });
       } catch (e) {
         tries--;
@@ -54,19 +51,14 @@ class Bol {
   async bolAccess(tries = 3) {
     return new Promise(async (resolve, reject) => {
       try {
-        let resp = await fetch(
-          "https://login.bol.com/token?grant_type=client_credentials",
-          {
-            method: "POST",
-            body: {},
-            headers: {
-              "Content-Type": "application/json",
-              Authorization:
-                "Basic " +
-                Buffer.from(this.API + ":" + this.SECRET).toString("base64"),
-            },
-          }
-        );
+        let resp = await fetch('https://login.bol.com/token?grant_type=client_credentials', {
+          method: 'POST',
+          body: {},
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Basic ' + Buffer.from(this.API + ':' + this.SECRET).toString('base64'),
+          },
+        });
         resp = await resp.json();
         this.bol_token = resp.access_token;
         this.expires_in = new Date().getTime() + resp.expires_in * 1000;
@@ -102,13 +94,14 @@ class Bol {
 
   createNewOffer = Offers.createNewOffer;
   exportOffers = Offers.exportOffers;
-  retrieveUnpublishedOfferReportById =
-    Offers.retrieveUnpublishedOfferReportById;
+  retrieveUnpublishedOfferReportById = Offers.retrieveUnpublishedOfferReportById;
   retrieveOfferByOfferId = Offers.retrieveOfferByOfferId;
   updateOffer = Offers.updateOffer;
   deleteOffer = Offers.deleteOffer;
   updateOfferPrice = Offers.updateOfferPrice;
   updateOfferStock = Offers.updateOfferStock;
+  retrieveOfferReportById = Offers.retrieveOfferReportById;
+  exportStatus = Offers.exportStatus;
 
   // Depricated v9:
   // Offers
@@ -123,11 +116,11 @@ class Bol {
    */
   async offerList(tries = 3) {
     return new Promise(async (resolve, reject) => {
-      console.log({ ...(await this.bolHeader(2)), "Accept-Language": "nl" });
+      console.log({ ...(await this.bolHeader(2)), 'Accept-Language': 'nl' });
       try {
-        let resp = await fetch("https://api.bol.com/retailer/products/list", {
-          method: "GET",
-          headers: { ...(await this.bolHeader(2)), "Accept-Language": "nl" },
+        let resp = await fetch('https://api.bol.com/retailer/products/list', {
+          method: 'GET',
+          headers: { ...(await this.bolHeader(2)), 'Accept-Language': 'nl' },
         });
         resp = await resp.json();
         return resolve(resp);
@@ -148,13 +141,10 @@ class Bol {
   async getOffer(offer_id, tries = 3) {
     return new Promise(async (resolve, reject) => {
       try {
-        let resp = await fetch(
-          "https://api.bol.com/retailer/offers/" + offer_id,
-          {
-            method: "GET",
-            headers: await this.bolHeader(2),
-          }
-        );
+        let resp = await fetch('https://api.bol.com/retailer/offers/' + offer_id, {
+          method: 'GET',
+          headers: await this.bolHeader(2),
+        });
         resp = await resp.json();
         return resolve(resp);
       } catch (e) {
@@ -176,27 +166,21 @@ class Bol {
   async pause(offer_id, hold, method, tries = 3) {
     return new Promise(async (resolve, reject) => {
       try {
-        let resp = await fetch(
-          "https://api.bol.com/retailer/offers/" + offer_id,
-          {
-            method: "PUT",
-            body: JSON.stringify({
-              onHoldByRetailer: hold,
-              fulfilment: { method: method },
-            }),
-            headers: await this.bolHeader(2),
-          }
-        );
+        let resp = await fetch('https://api.bol.com/retailer/offers/' + offer_id, {
+          method: 'PUT',
+          body: JSON.stringify({
+            onHoldByRetailer: hold,
+            fulfilment: { method: method },
+          }),
+          headers: await this.bolHeader(2),
+        });
         resp = await resp.json();
         return resolve();
       } catch (e) {
         console.error(e);
         tries--;
         if (tries <= 0) return reject(e);
-        return setTimeout(
-          () => resolve(this.pause(offer_id, hold, method, tries)),
-          2000
-        );
+        return setTimeout(() => resolve(this.pause(offer_id, hold, method, tries)), 2000);
       }
     });
   }
@@ -212,29 +196,20 @@ class Bol {
   async stock(offer_id, stock, managedByRetailer, tries = 3) {
     return new Promise(async (resolve, reject) => {
       try {
-        let resp = await fetch(
-          "https://api.bol.com/retailer/offers/" + offer_id + "/stock",
-          {
-            method: "PUT",
-            body: JSON.stringify({
-              amount: stock,
-              managedByRetailer: managedByRetailer,
-            }),
-            headers: await this.bolHeader(2),
-          }
-        );
+        let resp = await fetch('https://api.bol.com/retailer/offers/' + offer_id + '/stock', {
+          method: 'PUT',
+          body: JSON.stringify({
+            amount: stock,
+            managedByRetailer: managedByRetailer,
+          }),
+          headers: await this.bolHeader(2),
+        });
         resp = await resp.json();
         return resolve();
       } catch (e) {
         tries--;
         if (tries <= 0) return reject(e);
-        return setTimeout(
-          () =>
-            resolve(
-              this.stock(offer_id, stock, managedByRetailer, (tries = 3))
-            ),
-          2000
-        );
+        return setTimeout(() => resolve(this.stock(offer_id, stock, managedByRetailer, (tries = 3))), 2000);
       }
     });
   }
@@ -249,28 +224,19 @@ class Bol {
   async delivery(offer_id, fulfilment, tries = 3) {
     return new Promise(async (resolve, reject) => {
       try {
-        let resp = await fetch(
-          "https://api.bol.com/retailer/offers/" + offer_id,
-          {
-            method: "PUT",
-            body: JSON.stringify({ fulfilment: fulfilment }),
-            headers: await this.bolHeader(2),
-          }
-        );
+        let resp = await fetch('https://api.bol.com/retailer/offers/' + offer_id, {
+          method: 'PUT',
+          body: JSON.stringify({ fulfilment: fulfilment }),
+          headers: await this.bolHeader(2),
+        });
         if (resp.ok) return resolve(true);
         tries--;
         if (tries <= 0) return reject(resp);
-        return setTimeout(
-          () => resolve(this.delivery(offer_id, fulfilment, tries)),
-          2000
-        );
+        return setTimeout(() => resolve(this.delivery(offer_id, fulfilment, tries)), 2000);
       } catch (e) {
         tries--;
         if (tries <= 0) return reject(e);
-        return setTimeout(
-          () => resolve(this.delivery(offer_id, fulfilment, tries)),
-          2000
-        );
+        return setTimeout(() => resolve(this.delivery(offer_id, fulfilment, tries)), 2000);
       }
     });
   }
@@ -285,23 +251,17 @@ class Bol {
   async orders(page, status, tries = 3) {
     return new Promise(async (resolve, reject) => {
       try {
-        let resp = await fetch(
-          `https://api.bol.com/retailer/orders?page=${page}&status=${status}`,
-          {
-            method: "GET",
-            headers: await this.bolHeader(2),
-          }
-        );
+        let resp = await fetch(`https://api.bol.com/retailer/orders?page=${page}&status=${status}`, {
+          method: 'GET',
+          headers: await this.bolHeader(2),
+        });
         resp = await resp.json();
         if (resp.orders == undefined) resp.orders = [];
         return resolve(resp.orders);
       } catch (e) {
         tries--;
         if (tries <= 0) return reject();
-        return setTimeout(
-          () => resolve(this.orders(page, status, tries)),
-          2000
-        );
+        return setTimeout(() => resolve(this.orders(page, status, tries)), 2000);
       }
     });
   }
@@ -315,13 +275,10 @@ class Bol {
   async orderById(orderId, tries = 3) {
     return new Promise(async (resolve, reject) => {
       try {
-        let resp = await fetch(
-          `https://api.bol.com/retailer/orders/${orderId}`,
-          {
-            method: "GET",
-            headers: await this.bolHeader(2),
-          }
-        );
+        let resp = await fetch(`https://api.bol.com/retailer/orders/${orderId}`, {
+          method: 'GET',
+          headers: await this.bolHeader(2),
+        });
         resp = await resp.json();
         if (resp == undefined) resp = [];
         return resolve(resp);
@@ -346,7 +303,7 @@ class Bol {
         let resp = await fetch(
           `https://api.bol.com/retailer/shipments?page=${page}&fulfilment-method=${fulfilmentMethod}`,
           {
-            method: "GET",
+            method: 'GET',
             headers: await this.bolHeader(2),
           }
         );
@@ -356,10 +313,7 @@ class Bol {
       } catch (e) {
         tries--;
         if (tries <= 0) return reject();
-        return setTimeout(
-          () => resolve(this.shipments(page, fulfilmentMethod, tries)),
-          2000
-        );
+        return setTimeout(() => resolve(this.shipments(page, fulfilmentMethod, tries)), 2000);
       }
     });
   }
@@ -374,23 +328,17 @@ class Bol {
   async shipmentById(shipmentId, tries = 3) {
     return new Promise(async (resolve, reject) => {
       try {
-        let resp = await fetch(
-          `https://api.bol.com/retailer/shipments/${shipmentId}`,
-          {
-            method: "GET",
-            headers: await this.bolHeader(2),
-          }
-        );
+        let resp = await fetch(`https://api.bol.com/retailer/shipments/${shipmentId}`, {
+          method: 'GET',
+          headers: await this.bolHeader(2),
+        });
         resp = await resp.json();
         if (resp == undefined) resp = [];
         return resolve(resp);
       } catch (e) {
         tries--;
         if (tries <= 0) return reject();
-        return setTimeout(
-          () => resolve(this.shipmentById(shipmentId, tries)),
-          2000
-        );
+        return setTimeout(() => resolve(this.shipmentById(shipmentId, tries)), 2000);
       }
     });
   }
@@ -404,13 +352,10 @@ class Bol {
   async detail(order_id, tries = 3) {
     return new Promise(async (resolve, reject) => {
       try {
-        let resp = await fetch(
-          "https://api.bol.com/retailer/orders/" + order_id,
-          {
-            method: "GET",
-            headers: await this.bolHeader(2),
-          }
-        );
+        let resp = await fetch('https://api.bol.com/retailer/orders/' + order_id, {
+          method: 'GET',
+          headers: await this.bolHeader(2),
+        });
         resp = await resp.json();
         return resolve(resp);
       } catch (e) {
@@ -431,25 +376,19 @@ class Bol {
   async price(offer_id, price, tries = 3) {
     return new Promise(async (resolve, reject) => {
       try {
-        let resp = await fetch(
-          "https://api.bol.com/retailer/offers/" + offer_id + "/price",
-          {
-            method: "PUT",
-            body: JSON.stringify({
-              pricing: { bundlePrices: [{ quantity: 1, unitPrice: price }] },
-            }),
-            headers: await this.bolHeader(2),
-          }
-        );
+        let resp = await fetch('https://api.bol.com/retailer/offers/' + offer_id + '/price', {
+          method: 'PUT',
+          body: JSON.stringify({
+            pricing: { bundlePrices: [{ quantity: 1, unitPrice: price }] },
+          }),
+          headers: await this.bolHeader(2),
+        });
         resp = await resp.json();
         return resolve(resp);
       } catch (e) {
         tries--;
         if (tries <= 0) return reject();
-        return setTimeout(
-          () => resolve(this.price(offer_id, price, tries)),
-          2000
-        );
+        return setTimeout(() => resolve(this.price(offer_id, price, tries)), 2000);
       }
     });
   }
