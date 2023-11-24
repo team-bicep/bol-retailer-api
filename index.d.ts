@@ -220,7 +220,11 @@ export default class Bol {
    * @example
    * const insight = await bol.createNewOffer();
    */
-  updateOffer(offerId: string, offerData: TUpdateOfferData, tries?: number): Promise<TCreateOfferResult>;
+  updateOffer(
+    offerId: string,
+    offerData: TUpdateOfferData,
+    tries?: number,
+  ): Promise<TCreateOfferResult>;
 
   /**
    * Delete offer by id
@@ -258,15 +262,37 @@ export default class Bol {
   updateOfferStock(offerId: string, offerStock: TOfferStocks, tries?: number): Promise<void>;
 
   /**
+   * Get catalog product details by EAN
+   * @description Gets the details of a catalog product by means of its EAN.
+   * @param {string} [ean] - The EAN number associated with this product.
+   * @param {number} [tries=3] - The number of attempts
+   * @returns {Promise<Object>}
+   * @example
+   * const content = await bol.getCatalogProductDetailsByEAN('0000007740404');
+   */
+  getCatalogProductDetailsByEAN(ean: string, tries?: number): Promise<void>;
+
+  /**
    * Get product ids by EAN
    * @description Get the bol.com specific product identifier and the related EANs.
-   * @param {string} [offerId] - The EAN number associated with this product.
+   * @param {string} [ean] - The EAN number associated with this product.
    * @param {number} [tries=3] - The number of attempts
    * @returns {Promise<Object>}
    * @example
    * const insight = await bol.getProductIdsByEan();
    */
   getProductIdsByEan(ean: string, tries?: number): Promise<string[]>;
+
+  /**
+   * Get product assets
+   * @description Gets the list of asset available for the product by EAN.
+   * @param {string} [ean] - The EAN number associated with this product.
+   * @param {number} [tries=3] - The number of attempts
+   * @returns {Promise<Object>}
+   * @example
+   * const insight = await bol.getProductAssets();
+   */
+  getProductAssets(ean: string, tries?: number): Promise<string[]>;
 
   // deprecated, Remove once v10 finished
   offerList(tries?: number): Promise<TOffer[]>;
