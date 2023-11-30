@@ -106,6 +106,7 @@ class Bol {
 
   // Product Content
   getCatalogProductDetailsByEAN = ProductContent.getCatalogProductDetailsByEAN;
+  getProductList = ProductContent.getProductList;
 
   // Products
   getProductIdsByEan = Products.getProductIdsByEan;
@@ -217,10 +218,7 @@ class Bol {
       } catch (e) {
         tries--;
         if (tries <= 0) return reject(e);
-        return setTimeout(
-          () => resolve(this.stock(offer_id, stock, managedByRetailer, (tries = 3))),
-          2000,
-        );
+        return setTimeout(() => resolve(this.stock(offer_id, stock, managedByRetailer, (tries = 3))), 2000);
       }
     });
   }
@@ -262,13 +260,10 @@ class Bol {
   async orders(page, status, tries = 3) {
     return new Promise(async (resolve, reject) => {
       try {
-        let resp = await fetch(
-          `https://api.bol.com/retailer/orders?page=${page}&status=${status}`,
-          {
-            method: 'GET',
-            headers: await this.bolHeader(2),
-          },
-        );
+        let resp = await fetch(`https://api.bol.com/retailer/orders?page=${page}&status=${status}`, {
+          method: 'GET',
+          headers: await this.bolHeader(2),
+        });
         resp = await resp.json();
         if (resp.orders == undefined) resp.orders = [];
         return resolve(resp.orders);
@@ -319,7 +314,7 @@ class Bol {
           {
             method: 'GET',
             headers: await this.bolHeader(2),
-          },
+          }
         );
         resp = await resp.json();
         if (resp.shipments == undefined) resp.shipments = [];

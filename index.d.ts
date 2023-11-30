@@ -220,11 +220,7 @@ export default class Bol {
    * @example
    * const insight = await bol.createNewOffer();
    */
-  updateOffer(
-    offerId: string,
-    offerData: TUpdateOfferData,
-    tries?: number,
-  ): Promise<TCreateOfferResult>;
+  updateOffer(offerId: string, offerData: TUpdateOfferData, tries?: number): Promise<TCreateOfferResult>;
 
   /**
    * Delete offer by id
@@ -294,6 +290,17 @@ export default class Bol {
    */
   getProductAssets(ean: string, tries?: number): Promise<string[]>;
 
+  /**
+   * Get product content
+   * @description Gets the content of a product by EAN.
+   * @param {string} [ean] - The EAN number associated with this product.
+   * @param {number} [tries=3] - The number of attempts
+   * @returns {Promise<Object>}
+   * @example
+   * const content = await bol.getProductContent('0000007740404');
+   */
+  getProductList(getProductListProps: getProductListProps, tries?: number): Promise<any[]>;
+
   // deprecated, Remove once v10 finished
   offerList(tries?: number): Promise<TOffer[]>;
 
@@ -323,6 +330,16 @@ export default class Bol {
 type TCountry = {
   countryCode: string;
   value: number;
+};
+
+type getProductListProps = {
+  countryCode?: string;
+  searchTerm?: string;
+  categoryId?: string;
+  filterRanges?: unknown[];
+  filterValues?: unknown[];
+  sort?: string;
+  page?: number;
 };
 
 export enum EConditionName {
