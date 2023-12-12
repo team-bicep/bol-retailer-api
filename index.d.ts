@@ -301,6 +301,9 @@ export default class Bol {
    */
   getProductList(getProductListProps: getProductListProps, tries?: number): Promise<any[]>;
 
+  // orders
+  getOrderByOrderId(orderId: string, tries?: number): Promise<any>;
+
   // deprecated, Remove once v10 finished
   offerList(tries?: number): Promise<TOffer[]>;
 
@@ -415,6 +418,77 @@ type TOfferStocks = {
   amount: number;
   managedByRetailer: boolean;
 };
+
+// orders
+
+export type TShipmentDetails = {
+  salutation: string;
+  firstName: string;
+  surname: string;
+  streetName: string;
+  houseNumber: string;
+  zipCode: string;
+  city: string;
+  countryCode: string;
+  email: string;
+  company: string;
+  language: string;
+};
+
+export type TBillingDetails = {
+  salutation: string;
+  firstName: string;
+  surname: string;
+  streetName: string;
+  houseNumber: string;
+  zipCode: string;
+  city: string;
+  countryCode: string;
+  email: string;
+  orderReference: string;
+};
+
+export type TOrderDataFulfilment = {
+  method: string;
+  distributionParty: string;
+  latestDeliveryDate: string;
+  expiryDate: string;
+  timeFrameType: string;
+};
+
+export type TOrderDataOffer = {
+  offerId: string;
+  reference: string;
+};
+
+export type TOrderDataProduct = {
+  ean: string;
+  title: string;
+};
+
+export type TOrderItems = {
+  orderItemId: string;
+  cancellationRequest: boolean;
+  fulfilment: TOrderDataFulfilment;
+  offer: TOrderDataOffer;
+  product: TOrderDataProduct;
+  quantity: number;
+  quantityShipped: number;
+  quantityCancelled: number;
+  unitPrice: number;
+  commission: number;
+  latestChangedDateTime: string;
+};
+
+export type TBolOrderData = {
+  orderId: string;
+  pickupPoint: boolean;
+  orderPlacedDateTime: string;
+  shipmentDetails: TShipmentDetails;
+  billingDetails: TBillingDetails;
+  orderItems: TOrderItems[];
+};
+
 // deprecated, Remove once v10 finished
 
 type TOffer = {

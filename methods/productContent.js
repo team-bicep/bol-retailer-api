@@ -37,7 +37,7 @@ async function getCatalogProductDetailsByEAN(ean, tries = 3) {
       let resp = await fetch(`https://api.bol.com/retailer/content/catalog-products/${ean}`, {
         method: 'get',
         headers: {
-          ...(await this.bolHeader(2)),
+            ...(await this.bolHeader(2)),
           'Accept-Language': 'nl',
         },
       });
