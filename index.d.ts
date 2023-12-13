@@ -1,5 +1,5 @@
 import { TCommission, TCommissionQueries, TReduction } from './types/commissions';
-import { TInsights, TPerformanceIndicator, TSalesForecast, TSearchTerm } from './types/insights';
+import { TInsights, TPerformanceIndicator, TSalesForecast, TSearchTerm, TSearchTermsQueryParams } from './types/insights';
 import { TInventory } from './types/inventory';
 
 export default class Bol {
@@ -81,7 +81,7 @@ export default class Bol {
    * @example
    * const insight = await bol.offerInsight();
    */
-  searchTerms(tries?: number): Promise<TSearchTerm>;
+  searchTerms(queryParams: TSearchTermsQueryParams, tries?: number): Promise<TSearchTerm>;
 
   // Inventory
 

@@ -1,4 +1,4 @@
-import { TCountry } from "..";
+import { TCountry } from '..';
 
 export type TInsights = {
   name: string;
@@ -95,4 +95,11 @@ type TSearchTerm = {
   countries: TSearchTermCountry[];
   periods: TSearchTermPeriod[];
   relatedSearchTerms: TRelatedSearchTerm[];
+};
+
+export type TSearchTermsQueryParams = {
+  searchTerm: string;
+  period: 'DAY' | 'WEEK' | 'MONTH';
+  numberOfPeriods: number;
+  relatedSearchTerms?: boolean;
 };
