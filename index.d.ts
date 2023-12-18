@@ -1,9 +1,15 @@
 import { TCommission, TCommissionQueries, TReduction } from './types/commissions';
-import { TInsights, TPerformanceIndicator, TSalesForecast, TSearchTerm, TSearchTermsQueryParams } from './types/insights';
+import {
+  TInsights,
+  TPerformanceIndicator,
+  TSalesForecast,
+  TSearchTerm,
+  TSearchTermsQueryParams,
+} from './types/insights';
 import { TInventory } from './types/inventory';
 
 export default class Bol {
-  constructor(APIKEY: string, SECRET: string);
+  constructor(APIKEY: string, SECRET: string, bol_token?: string, expires_in?: number);
 
   bolHeader(tries?: number): Promise<{ [key: string]: string }>;
 

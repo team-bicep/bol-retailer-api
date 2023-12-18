@@ -16,11 +16,11 @@ class Bol {
    * @param {string} APIKEY - The API key.
    * @param {string} SECRET - The secret key.
    */
-  constructor(APIKEY, SECRET) {
+  constructor(APIKEY, SECRET, bol_token, expires_in) {
     this.API = APIKEY;
     this.SECRET = SECRET;
-    this.bol_token;
-    this.expires_in;
+    this.bol_token = bol_token;
+    this.expires_in = expires_in;
   }
 
   /**
@@ -29,6 +29,9 @@ class Bol {
    * @returns {Promise<Object>} - A promise that resolves with the header object.
    */
   async bolHeader(tries = 3) {
+    console.log('this.bol_token', this.bol_token);
+    console.log('this.expires_in', this.expires_in);
+    console.log('Token expires in: ', (this.expires_in - new Date().getTime()) / 1000, 'seconds');
     return new Promise(async (resolve, reject) => {
       try {
         if (!this.bol_token || this.expires_in < new Date().getTime()) await this.bolAccess(tries);
@@ -51,6 +54,8 @@ class Bol {
    * @returns {Promise<void>} - A promise that resolves when the operation is done.
    */
   async bolAccess(tries = 3) {
+    console.log('ACCES TOKEN REQUESTED');
+    // return;
     return new Promise(async (resolve, reject) => {
       try {
         let resp = await fetch('https://login.bol.com/token?grant_type=client_credentials', {

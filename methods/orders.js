@@ -1,6 +1,5 @@
 async function getOrderByOrderId(orderId, tries = 3) {
   if (!orderId) throw new Error('OrderId must be provided');
-  console.log(orderId);
   return new Promise(async (resolve, reject) => {
     try {
       let resp = await fetch(`https://api.bol.com/retailer/orders/${orderId}`, {
