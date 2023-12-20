@@ -1,6 +1,7 @@
 import { TCommission, TCommissionQueries, TReduction } from './types/commissions';
 import {
   TInsights,
+  TOfferInsightQueryParams,
   TPerformanceIndicator,
   TSalesForecast,
   TSearchTerm,
@@ -14,6 +15,10 @@ export default class Bol {
   bolHeader(tries?: number): Promise<{ [key: string]: string }>;
 
   bolAccess(tries?: number): Promise<void>;
+
+  //////////////////////////////////////////////////
+  // ---              Commsions               --- //
+  //////////////////////////////////////////////////
 
   /**
    * Get all commissions and reductions by EAN per single EAN
@@ -44,17 +49,25 @@ export default class Bol {
    */
   commissionList(commissionQueries: TCommissionQueries, tries?: number): Promise<TCommission[]>;
 
-  // Insights
+  //////////////////////////////////////////////////
+  // ---               Insights               --- //
+  //////////////////////////////////////////////////
 
   /**
    * Get offer insights
    * @description Get the product visits and the buy box percentage for an offer during a given period.
+   * @param {Object} queryParams - The query parameters.
    * @param {number} [tries=3] - The number of attempts to fetch the commissions.
    * @returns {Promise<Object>} - A promise that resolves with the commission list.
    * @example
-   * const insight = await bol.offerInsight();
+   * const insight = await bol.offerInsight({
+   *  offerId: '1234567',
+   *  period: 'lastWeek',
+   *  numberOfPeriods: 1,
+   *  name : 'BUY_BOX_PERCENTAGE'
+   * });
    */
-  offerInsights(tries?: number): Promise<TInsights>;
+  offerInsights(queryParams: TOfferInsightQueryParams, tries?: number): Promise<TInsights>;
 
   /**
    * Get performance indicators
@@ -89,7 +102,9 @@ export default class Bol {
    */
   searchTerms(queryParams: TSearchTermsQueryParams, tries?: number): Promise<TSearchTerm>;
 
-  // Inventory
+  //////////////////////////////////////////////////
+  // ---              Inventory               --- //
+  //////////////////////////////////////////////////
 
   /**
    * Get search terms
@@ -103,7 +118,9 @@ export default class Bol {
    */
   getInventory(tries?: number): Promise<TInventory[]>;
 
-  // Invoices
+  //////////////////////////////////////////////////
+  // ---               Invoices               --- //
+  //////////////////////////////////////////////////
 
   /**
    * Get all invoices
@@ -152,7 +169,9 @@ export default class Bol {
    */
   getInvoiceSpecificationById(invoiceId: string, tries?: number): Promise<string>;
 
-  // Offers
+  //////////////////////////////////////////////////
+  // ---                Offers                --- //
+  //////////////////////////////////////////////////
 
   /**
    *Create a new offer
@@ -226,7 +245,11 @@ export default class Bol {
    * @example
    * const insight = await bol.createNewOffer();
    */
-  updateOffer(offerId: string, offerData: TUpdateOfferData, tries?: number): Promise<TCreateOfferResult>;
+  updateOffer(
+    offerId: string,
+    offerData: TUpdateOfferData,
+    tries?: number,
+  ): Promise<TCreateOfferResult>;
 
   /**
    * Delete offer by id

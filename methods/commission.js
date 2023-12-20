@@ -10,7 +10,7 @@ async function commission(ean, tries = 3) {
     } catch (e) {
       tries--;
       if (tries <= 0) return reject(e);
-      return setTimeout(() => resolve(this.commissionList(tries)), 2000);
+      return setTimeout(() => resolve(this.commission(tries)), 2000);
     }
   });
 }

@@ -1,4 +1,9 @@
-async function offerInsight(tries = 3) {
+async function offerInsight(queryParams, tries = 3) {
+  const offerIdString = `offer-id=${queryParams.offerId}`;
+  const periodString = `period=${queryParams.period}`;
+  const nameString = `name=${queryParams.name}`;
+  const numberOfPeriodsString = `number-of-periods=${queryParams.numberOfPeriods}`;
+  const queryParamString = `?${periodString}&${numberOfPeriodsString}`.replaceAll('\n', '');
   return new Promise(async (resolve, reject) => {
     try {
       let resp = await fetch('https://api.bol.com/retailer/insights/offer', {
@@ -60,13 +65,19 @@ async function searchTerms(queryParams, tries = 3) {
     ? `related-search-terms=${queryParams.relatedSearchTerms}`
     : '';
   const queryParamString =
-    `?${searchTermString}&${periodString}&${numberOfPeriodsString}&${relatedSearchTermsString}`.replaceAll('\n', '');
+    `?${searchTermString}&${periodString}&${numberOfPeriodsString}&${relatedSearchTermsString}`.replaceAll(
+      '\n',
+      '',
+    );
   return new Promise(async (resolve, reject) => {
     try {
-      let resp = await fetch(`https://api.bol.com/retailer/insights/search-terms${queryParamString}`, {
-        method: 'get',
-        headers: await this.bolHeader(2),
-      });
+      let resp = await fetch(
+        `https://api.bol.com/retailer/insights/search-terms${queryParamString}`,
+        {
+          method: 'get',
+          headers: await this.bolHeader(2),
+        },
+      );
       resp = await resp.json();
       return resolve(resp.searchTerms);
     } catch (e) {

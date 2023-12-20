@@ -1,7 +1,25 @@
-import { TCountry } from '..';
+import { TCountry, TOffer } from '..';
+
+export type TOfferInsightQueryParams = {
+  offerId: string;
+  period: TOfferInsightQueryParamsPeriods;
+  numberOfPeriods: number;
+  name: TOfferInsightQueryParamsNames;
+};
+
+export enum TOfferInsightQueryParamsPeriods {
+  DAY = 'DAY',
+  WEEK = 'WEEK',
+  MONTH = 'MONTH',
+}
+
+export enum TOfferInsightQueryParamsNames {
+  PRODUCT_VISITS = 'PRODUCT_VISITS',
+  BUY_BOX_PERCENTAGE = 'BUY_BOX_PERCENTAGE',
+}
 
 export type TInsights = {
-  name: string;
+  name: TOfferInsightQueryParamsNames;
   type: string;
   total: number;
   countries: TCountry[];

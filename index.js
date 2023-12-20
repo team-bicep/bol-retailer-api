@@ -7,6 +7,7 @@ const Offers = require('./methods/offers');
 const Products = require('./methods/products');
 const ProductContent = require('./methods/productContent');
 const Orders = require('./methods/orders');
+const Shipments = require('./methods/shipments');
 /**
  * Class representing the Bol API V.10.
  */
@@ -29,9 +30,6 @@ class Bol {
    * @returns {Promise<Object>} - A promise that resolves with the header object.
    */
   async bolHeader(tries = 3) {
-    console.log('this.bol_token', this.bol_token);
-    console.log('this.expires_in', this.expires_in);
-    console.log('Token expires in: ', (this.expires_in - new Date().getTime()) / 1000, 'seconds');
     return new Promise(async (resolve, reject) => {
       try {
         if (!this.bol_token || this.expires_in < new Date().getTime()) await this.bolAccess(tries);
@@ -54,8 +52,6 @@ class Bol {
    * @returns {Promise<void>} - A promise that resolves when the operation is done.
    */
   async bolAccess(tries = 3) {
-    console.log('ACCES TOKEN REQUESTED');
-    // return;
     return new Promise(async (resolve, reject) => {
       try {
         let resp = await fetch('https://login.bol.com/token?grant_type=client_credentials', {
@@ -79,7 +75,6 @@ class Bol {
   }
 
   // Commission
-  // gotta check if this works. i dont know how to do this better
   commission = Commission.commission;
   commissionList = Commission.commissionList;
 
@@ -90,15 +85,14 @@ class Bol {
   searchTerms = Insights.searchTerms;
 
   // Inventory
-
   getInventory = Inventory.getInventory;
 
   // Invoices
   getInvoices = Invoices.getInvoices;
   getInvoiceById = Invoices.getInvoiceById;
   getInvoiceSpecificationById = Invoices.getInvoiceSpecificationById;
-  // Offers
 
+  // Offers
   createNewOffer = Offers.createNewOffer;
   exportOffers = Offers.exportOffers;
   retrieveUnpublishedOfferReportById = Offers.retrieveUnpublishedOfferReportById;
@@ -121,6 +115,12 @@ class Bol {
   getProductIdsByEan = Products.getProductIdsByEan;
   getProductAssets = Products.getProductAssets;
 
+  // shipments
+  getShipmentList = Shipments.getShipmentList;
+  createAShipment = Shipments.createAShipment;
+  getAListOfInvoiceRequests = Shipments.getAListOfInvoiceRequests;
+  uploadAnInvoiceForShipmentId = Shipments.uploadAnInvoiceForShipmentId;
+  getAShipmentByShipmentId = Shipments.getAShipmentByShipmentId;
   // Depricated v9:
   // Offers
 
@@ -227,7 +227,10 @@ class Bol {
       } catch (e) {
         tries--;
         if (tries <= 0) return reject(e);
-        return setTimeout(() => resolve(this.stock(offer_id, stock, managedByRetailer, (tries = 3))), 2000);
+        return setTimeout(
+          () => resolve(this.stock(offer_id, stock, managedByRetailer, (tries = 3))),
+          2000,
+        );
       }
     });
   }
@@ -269,10 +272,13 @@ class Bol {
   async orders(page, status, tries = 3) {
     return new Promise(async (resolve, reject) => {
       try {
-        let resp = await fetch(`https://api.bol.com/retailer/orders?page=${page}&status=${status}`, {
-          method: 'GET',
-          headers: await this.bolHeader(2),
-        });
+        let resp = await fetch(
+          `https://api.bol.com/retailer/orders?page=${page}&status=${status}`,
+          {
+            method: 'GET',
+            headers: await this.bolHeader(2),
+          },
+        );
         resp = await resp.json();
         if (resp.orders == undefined) resp.orders = [];
         return resolve(resp.orders);
@@ -304,59 +310,6 @@ class Bol {
         tries--;
         if (tries <= 0) return reject();
         return setTimeout(() => resolve(this.orderById(orderId, tries)), 2000);
-      }
-    });
-  }
-
-  /**
-   * Fetch shipments from the Bol platform.
-   * @param {number} page - The page number to fetch.
-   * @param {string} fulfilmentMethod - The status of the shipments to fetch.
-   * @param {number} [tries=3] - The number of attempts to fetch the orders.
-   * @returns {Promise<Array<Object>>} - A promise that resolves with an array of orders.
-   */
-  async shipments(page, fulfilmentMethod, tries = 3) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let resp = await fetch(
-          `https://api.bol.com/retailer/shipments?page=${page}&fulfilment-method=${fulfilmentMethod}`,
-          {
-            method: 'GET',
-            headers: await this.bolHeader(2),
-          }
-        );
-        resp = await resp.json();
-        if (resp.shipments == undefined) resp.shipments = [];
-        return resolve(resp.shipments);
-      } catch (e) {
-        tries--;
-        if (tries <= 0) return reject();
-        return setTimeout(() => resolve(this.shipments(page, fulfilmentMethod, tries)), 2000);
-      }
-    });
-  }
-
-  /**
-   * Fetch shipments from the Bol platform.
-   * @param {number} page - The page number to fetch.
-   * @param {string} fulfilmentMethod - The status of the shipments to fetch.
-   * @param {number} [tries=3] - The number of attempts to fetch the orders.
-   * @returns {Promise<Array<Object>>} - A promise that resolves with an array of orders.
-   */
-  async shipmentById(shipmentId, tries = 3) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let resp = await fetch(`https://api.bol.com/retailer/shipments/${shipmentId}`, {
-          method: 'GET',
-          headers: await this.bolHeader(2),
-        });
-        resp = await resp.json();
-        if (resp == undefined) resp = [];
-        return resolve(resp);
-      } catch (e) {
-        tries--;
-        if (tries <= 0) return reject();
-        return setTimeout(() => resolve(this.shipmentById(shipmentId, tries)), 2000);
       }
     });
   }
