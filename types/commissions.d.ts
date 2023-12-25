@@ -1,14 +1,12 @@
-import { EConditionName } from "..";
-
 export type TCommissionQueries = {
   ean: string;
-  condition: EConditionName;
+  condition: ECommissionConditionName;
   unitPrice: number;
 }[];
 
 export type TCommission = {
   ean: string;
-  condition: EConditionName;
+  condition: ECommissionConditionName;
   unitPrice: number;
   fixedAmount: number;
   percentage: number;
@@ -23,3 +21,11 @@ export type TReduction = {
   startDate: string;
   endDate: string;
 }[];
+
+export enum ECommissionConditionName {
+  AS_NEW = 'AS_NEW',
+  NEW = 'NEW',
+  GOOD = 'GOOD',
+  REASONABLE = 'REASONABLE',
+  MODERATE = 'MODERATE',
+}

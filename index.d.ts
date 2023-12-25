@@ -3,12 +3,23 @@ import {
   TInsights,
   TOfferInsightQueryParams,
   TPerformanceIndicator,
+  TPerformanceIndicatorQueryParams,
   TSalesForecast,
+  TSalesForecastQueryParams,
   TSearchTerm,
   TSearchTermsQueryParams,
 } from './types/insights';
-import { TInventory } from './types/inventory';
-
+import { TGetInventoryQueryParams, TInventory } from './types/inventory';
+import { TGetInvoicesQueryParams } from './types/invoices';
+import {
+  TCreateOfferResult,
+  TExportOffer,
+  TOffer,
+  TOfferData,
+  TOfferPrices,
+  TOfferStocks,
+  TUpdateOfferData,
+} from './types/offers';
 export default class Bol {
   constructor(APIKEY: string, SECRET: string, bol_token?: string, expires_in?: number);
 
@@ -75,9 +86,16 @@ export default class Bol {
    * @param {number} [tries=3] - The number of attempts to fetch the commissions.
    * @returns {Promise<Object>} - A promise that resolves with the commission list.
    * @example
-   * const insight = await bol.offerInsight();
+   * const insight = await bol.offerInsight({
+   *  name: 'REVIEWS',
+   *  year: 2020,
+   *  week: 1
+   * });
    */
-  performanceIndicators(tries?: number): Promise<TPerformanceIndicator[]>;
+  performanceIndicators(
+    queryParams: TPerformanceIndicatorQueryParams,
+    tries?: number,
+  ): Promise<TPerformanceIndicator[]>;
 
   /**
    * Get performance indicators
@@ -85,9 +103,12 @@ export default class Bol {
    * @param {number} [tries=3] - The number of attempts to fetch the commissions.
    * @returns {Promise<Object>} - A promise that resolves with the commission list.
    * @example
-   * const insight = await bol.offerInsight();
+   * const insight = await bol.offerInsight({
+   *  offerId: '123456',
+   *  weeksAhead: 1,
+   * });
    */
-  salesForecast(tries?: number): Promise<TSalesForecast>;
+  salesForecast(queryParams: TSalesForecastQueryParams, tries?: number): Promise<TSalesForecast>;
 
   /**
    * Get search terms
@@ -98,7 +119,12 @@ export default class Bol {
    * @param {number} [tries=3] - The number of attempts to fetch the commissions.
    * @returns {Promise<Object>} - A promise that resolves with the commission list.
    * @example
-   * const insight = await bol.offerInsight();
+   * const insight = await bol.offerInsight({
+   *  searchTerm: 'Iphone',
+   *  period: 'DAY',
+   *  numberOfPeriods: 12,
+   *  relatedSearchTerms: true,
+   * });
    */
   searchTerms(queryParams: TSearchTermsQueryParams, tries?: number): Promise<TSearchTerm>;
 
@@ -114,9 +140,9 @@ export default class Bol {
    * @param {number} [tries=3] - The number of attempts to fetch the commissions.
    * @returns {Promise<Object>} - A promise that resolves with the commission list.
    * @example
-   * const insight = await bol.offerInsight();
+   * const insight = await bol.getInventory();
    */
-  getInventory(tries?: number): Promise<TInventory[]>;
+  getLVBInventory(queryParams: TGetInventoryQueryParams, tries?: number): Promise<TInventory[]>;
 
   //////////////////////////////////////////////////
   // ---               Invoices               --- //
@@ -133,12 +159,16 @@ export default class Bol {
    * The available media types differ per invoice and are listed per invoice
    * within the response. Note: the media types listed in the response must be
    * given in our standard API format.
+   * @param {Object} [queryParams] - The query parameters
    * @param {number} [tries=3] - The number of attempts to fetch the commissions.
    * @returns {Promise<Object>} - A promise that resolves with the commission list.
    * @example
-   * const insight = await bol.getInvoices();
+   * const invoices = await bol.getInvoices({
+   *   periodStartDate: '2020-01-01',
+   *   periodEndDate: '2020-01-31',
+   * });
    */
-  getInvoices(tries?: number): Promise<string>;
+  getInvoices(queryParams: TGetInvoicesQueryParams, tries?: number): Promise<string>;
 
   /**
    * Get an invoice by invoice id
@@ -150,7 +180,7 @@ export default class Bol {
    * @param {number} [tries=3] - The number of attempts to fetch the commissions.
    * @returns {Promise<Object>} - A promise that resolves with the commission list.
    * @example
-   * const insight = await bol.getInvoices();
+   * const invoice = await bol.getInvoiceById('123456');
    */
   getInvoiceById(invoiceId: string, tries?: number): Promise<string>;
 
@@ -165,7 +195,7 @@ export default class Bol {
    * @param {number} [tries=3] - The number of attempts to fetch the commissions.
    * @returns {Promise<Object>} - A promise that resolves with the commission list.
    * @example
-   * const insight = await bol.getInvoices();
+   * const invoiceSpecificatoin = await bol.getInvoiceSpecificationById('123456');
    */
   getInvoiceSpecificationById(invoiceId: string, tries?: number): Promise<string>;
 
@@ -332,29 +362,6 @@ export default class Bol {
 
   // orders
   getOrderByOrderId(orderId: string, tries?: number): Promise<any>;
-
-  // deprecated, Remove once v10 finished
-  offerList(tries?: number): Promise<TOffer[]>;
-
-  getOffer(order_id: string, tries?: number): Promise<TOffer>;
-
-  pause(offer_id: string, hold: boolean, method: string, tries?: number): Promise<void>;
-
-  stock(offer_id: string, stock: number, managedByRetailer: boolean, tries?: number): Promise<void>;
-
-  delivery(offer_id: string, fulfilment: any, tries?: number): Promise<boolean>; // #REPLACE
-
-  orders(page: number, status: 'OPEN' | 'SHIPPED' | 'ALL', tries?: number): Promise<any[]>; // #REPLACE
-
-  orderById(orderId: string, tries?: number): Promise<any[]>; // #REPLACE
-
-  shipments(page: number, fulfilmentMethod: 'FBR' | 'FBB', tries?: number): Promise<any[]>; // #REPLACE
-
-  shipmentById(shipmentId: string, tries?: number): Promise<any[]>; // #REPLACE
-
-  detail(order_id: string, tries?: number): Promise<any>; // #REPLACE
-
-  price(offer_id: string, price: number, tries?: number): Promise<any>; // #REPLACE
 }
 
 // Other
@@ -372,80 +379,6 @@ type getProductListProps = {
   filterValues?: unknown[];
   sort?: string;
   page?: number;
-};
-
-export enum EConditionName {
-  AS_NEW = 'AS_NEW',
-  NEW = 'NEW',
-}
-
-export type TOfferData = {
-  ean: string;
-  condition: {
-    name: EConditionName;
-    category?: string; // Applies to AS_NEW only
-    comment?: string;
-  };
-  reference?: string;
-  onHoldByRetailer?: boolean;
-  unknownProductTitle?: string;
-  pricing: {
-    bundlePrices: TBundlePrice[];
-  };
-  stock: {
-    amount: number;
-    managedByRetailer: boolean;
-  };
-  fulfilment: {
-    method: string;
-    deliveryCode?: string;
-  };
-};
-
-type TBundlePrice = {
-  quantity: number;
-  unitPrice: number;
-};
-
-// offers
-
-type TUpdateOfferData = {
-  reference?: string;
-  onHoldByRetailer: boolean;
-  unknownProductTitle?: string;
-  fulfilment: {
-    method: string;
-    deliveryCode: string;
-  };
-};
-
-type TCreateOfferResult = {
-  processStatusId: string;
-  entityId: string;
-  eventType: string;
-  description: string;
-  status: string;
-  errorMessage: string;
-  createTimestamp: string;
-  links: {
-    rel: string;
-    href: string;
-    method: string;
-  }[];
-};
-
-type TOfferPrices = {
-  pricing: {
-    bundlePrices: {
-      quantity: number;
-      unitPrice: number;
-    }[];
-  };
-};
-
-type TOfferStocks = {
-  amount: number;
-  managedByRetailer: boolean;
 };
 
 // orders
@@ -516,37 +449,4 @@ export type TBolOrderData = {
   shipmentDetails: TShipmentDetails;
   billingDetails: TBillingDetails;
   orderItems: TOrderItems[];
-};
-
-// deprecated, Remove once v10 finished
-
-type TOffer = {
-  offerId: string;
-  ean: string;
-  reference: string;
-  onHoldByRetailer: boolean;
-  pricing: { bundlePrices: [{ quantity: boolean; unitPrice: number }] };
-  stock: { amount: number; correctedStock: number; managedByRetailer: boolean };
-  fulfilment: { method: string; deliveryCode: string };
-  store: {
-    productTitle: string;
-    visible: [{ countryCode: string }];
-  };
-  condition: { name: string; category: string };
-};
-
-export type TExportOffer = {
-  offerId: string;
-  ean: string;
-  conditionName: string;
-  conditionCategory: string;
-  conditionComment: string;
-  bundlePricesPrice: string;
-  fulfilmentDeliveryCode: string;
-  stockAmount: string;
-  onHoldByRetailer: string;
-  fulfilmentType: string;
-  mutationDateTime: string;
-  referenceCode: string;
-  correctedStock: string;
 };

@@ -1,4 +1,4 @@
-import { TCountry, TOffer } from '..';
+import { TCountry } from '..';
 
 export type TOfferInsightQueryParams = {
   offerId: string;
@@ -120,4 +120,26 @@ export type TSearchTermsQueryParams = {
   period: 'DAY' | 'WEEK' | 'MONTH';
   numberOfPeriods: number;
   relatedSearchTerms?: boolean;
+};
+
+export type TPerformanceIndicatorQueryParams = {
+  name: TPerformanceIndicatorNames;
+  year: number;
+  week: number;
+};
+
+export enum TPerformanceIndicatorNames {
+  CANCELLATIONS = 'CANCELLATIONS',
+  FULFILMENT = 'FULFILMENT',
+  PHONE_AVAILABILITY = 'PHONE_AVAILABILITY',
+  RESPONSE_TIME = 'RESPONSE_TIME',
+  CASE_ITEM_RATIO = 'CASE_ITEM_RATIO',
+  TRACK_AND_TRACE = 'TRACK_AND_TRACE',
+  RETURNS = 'RETURNS',
+  REVIEWS = 'REVIEWS',
+}
+
+export type TSalesForecastQueryParams = {
+  offerId: string;
+  weeksAhead: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 };

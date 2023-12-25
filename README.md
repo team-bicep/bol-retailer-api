@@ -31,17 +31,17 @@ bol = new Bol(API_KEY, API_SECRET);
 - [x] Commissions
 	- [x] Get all commissions and reductions by EAN in bulk
 	- [x] Get all commissions and reductions by EAN per single EAN
-- [ ] Insights
+- [X] Insights
 	- [X] Get offer insights
-	- [ ] Get performance indicators
-	- [ ] Get sales forecast
-	- [ ] Get search terms
-- [ ] Inventory
-	- [ ] Get LVB/FBB inventory
-- [ ] Invoices
-	- [ ] Get all invoices
-	- [ ] Get an invoice by invoice id
-	- [ ] Get an invoice specification by invoice id
+	- [X] Get performance indicators
+	- [X] Get sales forecast
+	- [X] Get search terms
+- [X] Inventory
+	- [X] Get LVB/FBB inventory
+- [x] Invoices
+	- [x] Get all invoices
+	- [x] Get an invoice by invoice id
+	- [x] Get an invoice specification by invoice id
 - [ ] Offers
 	- [ ] Create a new offer
 	- [ ] Request an offer export file

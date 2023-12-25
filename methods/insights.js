@@ -3,10 +3,12 @@ async function offerInsight(queryParams, tries = 3) {
   const periodString = `period=${queryParams.period}`;
   const nameString = `name=${queryParams.name}`;
   const numberOfPeriodsString = `number-of-periods=${queryParams.numberOfPeriods}`;
-  const queryParamString = `?${periodString}&${numberOfPeriodsString}`.replaceAll('\n', '');
+  const queryParamString =
+    `?${offerIdString}&${periodString}&${nameString}&${numberOfPeriodsString}`.replaceAll('\n', '');
+
   return new Promise(async (resolve, reject) => {
     try {
-      let resp = await fetch('https://api.bol.com/retailer/insights/offer', {
+      let resp = await fetch(`https://api.bol.com/retailer/insights/offer${queryParamString}`, {
         method: 'get',
         headers: await this.bolHeader(2),
       });
@@ -20,13 +22,21 @@ async function offerInsight(queryParams, tries = 3) {
   });
 }
 
-async function performanceIndicator(tries = 3) {
+async function performanceIndicator(queryParams, tries = 3) {
+  const nameString = `name=${queryParams.name}`;
+  const yearString = `year=${queryParams.year}`;
+  const weekString = `week=${queryParams.week}`;
+  const queryParamString = `?${nameString}&${yearString}&${weekString}`.replaceAll('\n', '');
+
   return new Promise(async (resolve, reject) => {
     try {
-      let resp = await fetch('https://api.bol.com/retailer/insights/performance/indicator', {
-        method: 'get',
-        headers: await this.bolHeader(2),
-      });
+      let resp = await fetch(
+        `https://api.bol.com/retailer/insights/performance/indicator${queryParamString}`,
+        {
+          method: 'get',
+          headers: await this.bolHeader(2),
+        },
+      );
       resp = await resp.json();
       return resolve(resp.performanceIndicators);
     } catch (e) {
@@ -37,13 +47,20 @@ async function performanceIndicator(tries = 3) {
   });
 }
 
-async function salesForecast(tries = 3) {
+async function salesForecast(queryParams, tries = 3) {
+  const offerIdString = `offer-id=${queryParams.offerId}`;
+  const weeksAheadString = `weeks-ahead=${queryParams.weeksAhead}`;
+  const queryParamString = `?${offerIdString}&${weeksAheadString}`.replaceAll('\n', '');
+
   return new Promise(async (resolve, reject) => {
     try {
-      let resp = await fetch('https://api.bol.com/retailer/insights/sales-forecast', {
-        method: 'get',
-        headers: await this.bolHeader(2),
-      });
+      let resp = await fetch(
+        `ttps://api.bol.com/retailer/insights/sales-forecast${queryParamString}`,
+        {
+          method: 'get',
+          headers: await this.bolHeader(2),
+        },
+      );
       resp = await resp.json();
       return resolve(resp);
     } catch (e) {
