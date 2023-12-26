@@ -316,6 +316,14 @@ export default class Bol {
    */
   updateOfferStock(offerId: string, offerStock: TOfferStocks, tries?: number): Promise<void>;
 
+  //////////////////////////////////////////////////
+  // ---                orders                --- //
+  //////////////////////////////////////////////////
+  getOrderByOrderId(orderId: string, tries?: number): Promise<any>;
+
+  //////////////////////////////////////////////////
+  // ---                content               --- //
+  //////////////////////////////////////////////////
   /**
    * Get catalog product details by EAN
    * @description Gets the details of a catalog product by means of its EAN.
@@ -326,6 +334,19 @@ export default class Bol {
    * const content = await bol.getCatalogProductDetailsByEAN('0000007740404');
    */
   getCatalogProductDetailsByEAN(ean: string, tries?: number): Promise<void>;
+  //////////////////////////////////////////////////
+  // ---                product               --- //
+  //////////////////////////////////////////////////
+  /**
+   * Get product content
+   * @description Gets the content of a product by EAN.
+   * @param {string} [ean] - The EAN number associated with this product.
+   * @param {number} [tries=3] - The number of attempts
+   * @returns {Promise<Object>}
+   * @example
+   * const content = await bol.getProductContent('0000007740404');
+   */
+  getProductList(getProductListProps: getProductListProps, tries?: number): Promise<any[]>;
 
   /**
    * Get product ids by EAN
@@ -348,20 +369,6 @@ export default class Bol {
    * const insight = await bol.getProductAssets();
    */
   getProductAssets(ean: string, tries?: number): Promise<string[]>;
-
-  /**
-   * Get product content
-   * @description Gets the content of a product by EAN.
-   * @param {string} [ean] - The EAN number associated with this product.
-   * @param {number} [tries=3] - The number of attempts
-   * @returns {Promise<Object>}
-   * @example
-   * const content = await bol.getProductContent('0000007740404');
-   */
-  getProductList(getProductListProps: getProductListProps, tries?: number): Promise<any[]>;
-
-  // orders
-  getOrderByOrderId(orderId: string, tries?: number): Promise<any>;
 }
 
 // Other

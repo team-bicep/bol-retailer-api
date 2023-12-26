@@ -42,34 +42,34 @@ bol = new Bol(API_KEY, API_SECRET);
 	- [x] Get all invoices
 	- [x] Get an invoice by invoice id
 	- [x] Get an invoice specification by invoice id
-- [ ] Offers
-	- [ ] Create a new offer
-	- [ ] Request an offer export file
-	- [ ] Retrieve an offer export file by report id
-	- [ ] Request an unpublished offer report
-	- [ ] Retrieve an unpublished offer report by report id
-	- [ ] Retrieve an offer by its offer id
-	- [ ] Update an offer
-	- [ ] Delete offer by id
-	- [ ] Update price(s) for offer by id
-	- [ ] Update stock for offer by id
+- [x] Offers
+	- [x] Create a new offer
+	- [x] Request an offer export file
+	- [x] Retrieve an offer export file by report id
+	- [x] Request an unpublished offer report
+	- [x] Retrieve an unpublished offer report by report id
+	- [x] Retrieve an offer by its offer id
+	- [x] Update an offer
+	- [x] Delete offer by id
+	- [x] Update price(s) for offer by id
+	- [x] Update stock for offer by id
 - [ ] Orders
 	- [ ] Get a list of orders
 	- [ ] Cancel an order item by an order item id
-	- [ ] Get an order by order id
+	- [x] Get an order by order id
 - [ ] Product Content
-	- [ ] Get catalog product details by EAN\
+	- [x] Get catalog product details by EAN
 	- [ ] Get chunk recommendations
 	- [ ] Create content for a product
 	- [ ] Get an upload report by upload id
 - [ ] Products
-	- [ ] Get products list
+	- [x] Get products list
 	- [ ] Get products list filters
-	- [ ] Get product assets
+	- [x] Get product assets
 	- [ ] Get a list of competing offers by EAN
 	- [ ] Get product placements
 	- [ ] Get price star boundaries by EAN
-	- [ ] Get product ids by EAN
+	- [x] Get product ids by EAN
 	- [ ] Get product ratings
 - [ ] Promotions
 	- [ ] Get a list of promotions
