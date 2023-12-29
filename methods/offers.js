@@ -20,7 +20,6 @@ async function createNewOffer(offer, tries = 3) {
   });
 }
 
-
 async function exportOffers(tries = 3) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -89,8 +88,6 @@ async function exportOffers(tries = 3) {
   });
 }
 
-
-
 async function exportStatus(url, tries = 3) {
   return new Promise(async (resolve, reject) => {
     let headers = await this.bolHeader(3);
@@ -111,7 +108,6 @@ async function exportStatus(url, tries = 3) {
 }
 
 async function retrieveOfferReportById(reportId, tries = 3) {
-  console.log(reportId);
   return new Promise(async (resolve, reject) => {
     try {
       headers = await this.bolHeader(3);
