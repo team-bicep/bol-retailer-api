@@ -1,4 +1,4 @@
-import { TCommission, TCommissionQueries, TReduction } from './types/commissions';
+import { TCommission, TCommissionQueries } from './types/commissions';
 import {
   TInsights,
   TOfferInsightQueryParams,
@@ -20,6 +20,9 @@ import {
   TOfferStocks,
   TUpdateOfferData,
 } from './types/offers';
+import { IBolOrderData, IQueryParams } from './types/orders';
+import { IBolShipmentDetails } from './types/shipment';
+
 export default class Bol {
   constructor(APIKEY: string, SECRET: string, bol_token?: string, expires_in?: number);
 
@@ -28,7 +31,7 @@ export default class Bol {
   bolAccess(tries?: number): Promise<void>;
 
   //////////////////////////////////////////////////
-  // ---              Commsions               --- //
+  // ---              Commissions             --- //
   //////////////////////////////////////////////////
 
   /**
@@ -94,7 +97,7 @@ export default class Bol {
    */
   performanceIndicators(
     queryParams: TPerformanceIndicatorQueryParams,
-    tries?: number,
+    tries?: number
   ): Promise<TPerformanceIndicator[]>;
 
   /**
@@ -275,11 +278,7 @@ export default class Bol {
    * @example
    * const insight = await bol.createNewOffer();
    */
-  updateOffer(
-    offerId: string,
-    offerData: TUpdateOfferData,
-    tries?: number,
-  ): Promise<TCreateOfferResult>;
+  updateOffer(offerId: string, offerData: TUpdateOfferData, tries?: number): Promise<TCreateOfferResult>;
 
   /**
    * Delete offer by id
@@ -319,6 +318,7 @@ export default class Bol {
   //////////////////////////////////////////////////
   // ---                orders                --- //
   //////////////////////////////////////////////////
+  orders(queryParams?: IQueryParams, tries?: number): Promise<IBolOrderData[]>;
   getOrderByOrderId(orderId: string, tries?: number): Promise<any>;
 
   //////////////////////////////////////////////////
@@ -369,6 +369,13 @@ export default class Bol {
    * const insight = await bol.getProductAssets();
    */
   getProductAssets(ean: string, tries?: number): Promise<string[]>;
+
+  //////////////////////////////////////////////////
+  // ---              shipments               --- //
+  //////////////////////////////////////////////////
+  getShipmentList(page?: number, fulfilmentMethod?: string, orderId?: string, tries?: number): Promise<any[]>;
+
+  getAShipmentByShipmentId(shipmentId: string, tries?: number): Promise<IBolShipmentDetails>;
 }
 
 // Other

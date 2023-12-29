@@ -105,6 +105,7 @@ class Bol {
   exportStatus = Offers.exportStatus;
 
   // Orders
+  orders = Orders.orders;
   getOrderByOrderId = Orders.getOrderByOrderId;
 
   // Product Content
