@@ -74,7 +74,7 @@ export default class Bol {
    * @param {number} [tries=3] - The number of attempts to fetch the commissions.
    * @returns {Promise<Object>} - A promise that resolves with the commission list.
    * @example
-   * const insight = await bol.offerInsight({
+   * const insight = await bol.offerInsights({
    *  offerId: '1234567',
    *  period: 'lastWeek',
    *  numberOfPeriods: 1,

@@ -1,4 +1,4 @@
-async function offerInsight(queryParams, tries = 3) {
+async function offerInsights(queryParams, tries = 3) {
   const offerIdString = `offer-id=${queryParams.offerId}`;
   const periodString = `period=${queryParams.period}`;
   const nameString = `name=${queryParams.name}`;
@@ -17,7 +17,7 @@ async function offerInsight(queryParams, tries = 3) {
     } catch (e) {
       tries--;
       if (tries <= 0) return reject(e);
-      return setTimeout(() => resolve(this.offerInsight(tries)), 2000);
+      return setTimeout(() => resolve(this.offerInsights(tries)), 2000);
     }
   });
 }
@@ -106,7 +106,7 @@ async function searchTerms(queryParams, tries = 3) {
 }
 
 module.exports = {
-  offerInsight,
+  offerInsights,
   performanceIndicator,
   salesForecast,
   searchTerms,

@@ -79,7 +79,7 @@ class Bol {
   commissionList = Commission.commissionList;
 
   // Insights
-  offerInsight = Insights.offerInsight;
+  offerInsights = Insights.offerInsights;
   performanceIndicator = Insights.performanceIndicator;
   salesForecast = Insights.salesForecast;
   searchTerms = Insights.searchTerms;
