@@ -2,24 +2,13 @@ import { TCountry } from '..';
 
 export type TOfferInsightQueryParams = {
   offerId: string;
-  period: TOfferInsightQueryParamsPeriods;
+  period: 'DAY' | 'WEEK' | 'MONTH';
   numberOfPeriods: number;
-  name: TOfferInsightQueryParamsNames;
+  name: 'PRODUCT_VISITS' | 'BUY_BOX_PERCENTAGE';
 };
 
-export enum TOfferInsightQueryParamsPeriods {
-  DAY = 'DAY',
-  WEEK = 'WEEK',
-  MONTH = 'MONTH',
-}
-
-export enum TOfferInsightQueryParamsNames {
-  PRODUCT_VISITS = 'PRODUCT_VISITS',
-  BUY_BOX_PERCENTAGE = 'BUY_BOX_PERCENTAGE',
-}
-
 export type TInsights = {
-  name: TOfferInsightQueryParamsNames;
+  name: 'PRODUCT_VISITS' | 'BUY_BOX_PERCENTAGE';
   type: string;
   total: number;
   countries: TCountry[];
@@ -128,16 +117,15 @@ export type TPerformanceIndicatorQueryParams = {
   week: number;
 };
 
-export enum TPerformanceIndicatorNames {
-  CANCELLATIONS = 'CANCELLATIONS',
-  FULFILMENT = 'FULFILMENT',
-  PHONE_AVAILABILITY = 'PHONE_AVAILABILITY',
-  RESPONSE_TIME = 'RESPONSE_TIME',
-  CASE_ITEM_RATIO = 'CASE_ITEM_RATIO',
-  TRACK_AND_TRACE = 'TRACK_AND_TRACE',
-  RETURNS = 'RETURNS',
-  REVIEWS = 'REVIEWS',
-}
+export type TPerformanceIndicatorNames =
+  | 'CANCELLATIONS'
+  | 'FULFILMENT'
+  | 'PHONE_AVAILABILITY'
+  | 'RESPONSE_TIME'
+  | 'CASE_ITEM_RATIO'
+  | 'TRACK_AND_TRACE'
+  | 'RETURNS'
+  | 'REVIEWS';
 
 export type TSalesForecastQueryParams = {
   offerId: string;
