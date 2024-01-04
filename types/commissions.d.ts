@@ -22,10 +22,4 @@ export type TReduction = {
   endDate: string;
 }[];
 
-export enum ECommissionConditionName {
-  AS_NEW = 'AS_NEW',
-  NEW = 'NEW',
-  GOOD = 'GOOD',
-  REASONABLE = 'REASONABLE',
-  MODERATE = 'MODERATE',
-}
+export type ECommissionConditionName = 'AS_NEW' | 'NEW' | 'GOOD' | 'REASONABLE' | 'MODERATE';

@@ -102,46 +102,33 @@ export type TOffer = {
     {
       code: string;
       description: string;
-    },
+    }
   ];
 };
 
-export enum EOffersConditionCategory {
-  'NEW' = 'NEW',
-  'SECONDHAND' = 'SECONDHAND',
-}
+export type EOffersConditionCategory = 'NEW' | 'SECONDHAND';
 
-export enum EOffersConditionName {
-  'NEW' = 'NEW',
-  'AS_NEW' = 'AS_NEW',
-  'GOOD' = 'GOOD',
-  'REASONABLE' = 'REASONABLE',
-  'MODERATE' = 'MODERATE',
-}
+export type EOffersConditionName = 'NEW' | 'AS_NEW' | 'GOOD' | 'REASONABLE' | 'MODERATE';
 
-export enum EOffersFulfilmentMethod {
-  'FBR' = 'FBR',
-  'FBB' = 'FBB',
-}
+export type EOffersFulfilmentMethod = 'FBR' | 'FBB';
 
-export enum EOffersDeliveryCode {
-  '24uurs-23' = '24uurs-23',
-  '24uurs-22' = '24uurs-22',
-  '24uurs-21' = '24uurs-21',
-  '24uurs-20' = '24uurs-20',
-  '24uurs-19' = '24uurs-19',
-  '24uurs-18' = '24uurs-18',
-  '24uurs-17' = '24uurs-17',
-  '24uurs-16' = '24uurs-16',
-  '24uurs-15' = '24uurs-15',
-  '24uurs-14' = '24uurs-14',
-  '24uurs-13' = '24uurs-13',
-  '24uurs-12' = '24uurs-12',
-  '1-2d' = '1-2d',
-  '2-3d' = '2-3d',
-  '3-5d' = '3-5d',
-  '4-8d' = '4-8d',
-  '1-8d' = '1-8d',
-  'MijnLeverbelofte' = 'MijnLeverbelofte',
-  'VVB' = 'VVB',
-}
+export type EOffersDeliveryCode =
+  | '24uurs-23'
+  | '24uurs-22'
+  | '24uurs-21'
+  | '24uurs-20'
+  | '24uurs-19'
+  | '24uurs-18'
+  | '24uurs-17'
+  | '24uurs-16'
+  | '24uurs-15'
+  | '24uurs-14'
+  | '24uurs-13'
+  | '24uurs-12'
+  | '1-2d'
+  | '2-3d'
+  | '3-5d'
+  | '4-8d'
+  | '1-8d'
+  | 'MijnLeverbelofte'
+  | 'VVB';

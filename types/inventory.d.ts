@@ -14,12 +14,6 @@ export type TGetInventoryQueryParams = {
   query: string;
 };
 
-export enum TGetInventoryStock {
-  SUFFICIENT = 'SUFFICIENT',
-  INSUFFICIENT = 'INSUFFICIENT',
-}
+export type TGetInventoryStock = 'SUFFICIENT' | 'INSUFFICIENT';
 
-export enum TGetInventoryState {
-  REGULAR = 'REGULAR',
-  GRADED = 'GRADED',
-}
+export type TGetInventoryState = 'REGULAR' | 'GRADED';
