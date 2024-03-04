@@ -8,6 +8,7 @@ const Products = require('./methods/products');
 const ProductContent = require('./methods/productContent');
 const Orders = require('./methods/orders');
 const Shipments = require('./methods/shipments');
+const Retailer = require('./methods/retailer');
 /**
  * Class representing the Bol API V.10.
  */
@@ -122,6 +123,10 @@ class Bol {
   getAListOfInvoiceRequests = Shipments.getAListOfInvoiceRequests;
   uploadAnInvoiceForShipmentId = Shipments.uploadAnInvoiceForShipmentId;
   getAShipmentByShipmentId = Shipments.getAShipmentByShipmentId;
+
+  // retailer
+  getRetailer = Retailer.getRetailer;
+  getCurrentRetailer = Retailer.getCurrentRetailer;
 }
 
 module.exports = Bol;

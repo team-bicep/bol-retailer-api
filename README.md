@@ -87,8 +87,8 @@ bol = new Bol(API_KEY, API_SECRET);
 	- [ ] Update a replenishment by replenishment id
 	- [ ] Get load carrier labels
 	- [ ] Get pick list
-- [ ] Retailers
-	- [ ] Get retailer information by retailer id
+- [x] Retailers
+	- [x] Get retailer information by retailer id
 - [ ] Returns
 	- [ ] Get returns
 	- [ ] Create a return

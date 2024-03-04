@@ -22,7 +22,7 @@ import {
 } from './types/offers';
 import { IBolOrderData, IQueryParams } from './types/orders';
 import { IBolShipmentDetails } from './types/shipment';
-
+import { TCurrentRetailerShortResponse, TRetailerResponse } from './types/retailer';
 export default class Bol {
   constructor(APIKEY: string, SECRET: string, bol_token?: string, expires_in?: number);
 
@@ -376,6 +376,13 @@ export default class Bol {
   getShipmentList(page?: number, fulfilmentMethod?: string, orderId?: string, tries?: number): Promise<any[]>;
 
   getAShipmentByShipmentId(shipmentId: string, tries?: number): Promise<IBolShipmentDetails>;
+
+  //////////////////////////////////////////////////
+  // ---              retailer                --- //
+  //////////////////////////////////////////////////
+
+  getRetailer(retailerID: string, tries?: number): Promise<TRetailerResponse>;
+  getCurrentRetailer(short?: boolean, tries?: number): Promise<TRetailerResponse | TCurrentRetailerShortResponse>;
 }
 
 // Other
